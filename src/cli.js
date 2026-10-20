@@ -12,6 +12,7 @@ const done = require('./done');
 const handoff = require('./handoff');
 const reviewer = require('./reviewer');
 const ui = require('./ui');
+const worktree = require('./worktree');
 
 const HELP = `
 speckit-ai — Scaffold spec-driven AI workspace docs and drive the SDD flow
@@ -21,6 +22,7 @@ Usage:
   npx speckit-ai --init-hook [--force]
   npx speckit-ai idea "<title>"
   npx speckit-ai start "<title or idea>" [--affects=<feature>,<feature>] [--baseline]
+  npx speckit-ai worktree "<title>"
   npx speckit-ai done [<name>] [--force | --check]
   npx speckit-ai status [--json]
   npx speckit-ai generate <adr|contract> "<title>" [--for=<feature>] [--work=<name>]
@@ -42,6 +44,7 @@ Commands (SDD flow: idea -> start -> done):
   idea "<Title>"                   Save an idea in specs/ideas/ (backlog)
   start "<Title|idea>"             Start a work in specs/active/ (a new feature, or --affects=<a,b> to change existing features)
   start "<Title>" --baseline       Write the spec of code that already exists (no tasks/review needed at done)
+  worktree "<Title>"               Create a new Git worktree and start work in parallel
   done [<name>] [--force]          Check gates, write specs to specs/features/, keep work files in specs/.history/
   done [<name>] --check            Run the same gates and report; writes nothing (exit 1 if not ready)
   status [--json]                  Show active works and ideas in dependency order
@@ -93,6 +96,7 @@ const ALLOWED_FLAGS = {
   '': ['mode', 'init-hook', 'force'],
   idea: [],
   start: ['affects', 'baseline'],
+  worktree: [],
   done: ['force', 'check'],
   status: ['json'],
   generate: ['for', 'work'],
@@ -195,6 +199,10 @@ async function dispatch(argv, targetDir) {
         { affects: parseList(valueFlag(flags, 'affects')), baseline: flags.baseline === true },
         targetDir
       );
+      return 0;
+
+    case 'worktree':
+      worktree.createWorktree(text, targetDir);
       return 0;
 
     case 'done':

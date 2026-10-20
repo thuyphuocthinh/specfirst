@@ -1,0 +1,80 @@
+'use strict';
+
+/**
+ * @fileoverview Golden Reference Pattern: Service Layer (Clean Architecture)
+ * Quy tắc:
+ * 1. Single Responsibility (SRP): Service chỉ chứa nghiệp vụ (business logic), không chứa logic HTTP hay SQL thuần.
+ * 2. Dependency Injection: Nhận repository/dependencies qua constructor.
+ * 3. Error Handling: Bắn ra Domain Errors có nghĩa thay vì generic error.
+ */
+
+class UserService {
+  /**
+   * @param {Object} userRepository - Data access interface
+   */
+  constructor(userRepository) {
+    if (!userRepository) {
+      throw new Error('[UserService] userRepository is required');
+    }
+    this.userRepository = userRepository;
+  }
+
+  /**
+   * Tạo người dùng mới sau khi kiểm tra tính hợp lệ
+   * @param {Object} params
+   * @param {string} params.email
+   * @param {string} params.name
+   * @returns {Promise<Object>} Người dùng vừa tạo
+   */
+  async createUser({ email, name }) {
+    this._validateUserData({ email, name });
+
+    const existing = await this.userRepository.findByEmail(email);
+    if (existing) {
+      const err = new Error(`User with email "${email}" already exists`);
+      err.code = 'USER_ALREADY_EXISTS';
+      throw err;
+    }
+
+    const newUser = await this.userRepository.create({
+      email: email.toLowerCase().trim(),
+      name: name.trim(),
+      createdAt: new Date(),
+    });
+
+    return newUser;
+  }
+
+  /**
+   * Tìm người dùng theo ID
+   * @param {string} id
+   * @returns {Promise<Object>}
+   */
+  async getUserById(id) {
+    if (!id) throw new Error('[UserService] id is required');
+
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      const err = new Error(`User not found with id "${id}"`);
+      err.code = 'NOT_FOUND';
+      throw err;
+    }
+
+    return user;
+  }
+
+  /**
+   * Helper kiểm tra dữ liệu đầu vào (tách nhỏ để dễ test)
+   * @private
+   */
+  _validateUserData({ email, name }) {
+    if (!email || !email.includes('@')) {
+      throw new Error('Invalid email format');
+    }
+    if (!name || name.trim().length < 2) {
+      throw new Error('Name must be at least 2 characters');
+    }
+  }
+}
+
+module.exports = { UserService };

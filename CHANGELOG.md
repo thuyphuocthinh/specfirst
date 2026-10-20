@@ -4,6 +4,20 @@ All notable changes to `speckit-ai`. Versions before 2.2.0 are described by thei
 
 After updating, run `npx speckit-ai upgrade` (add `--apply` to write) to refresh `specs/_workflow.md` and the skills in `.agents/skills/`. Your own `.agents/AGENTS.md` is never changed by the tool: `upgrade` only lists the lines you may want to add.
 
+## 2.4.0 - 2026-10-20
+
+### Added
+- `speckit-ai worktree <title>`: create a new Git worktree and branch (`feature/<slug>`), copy local config files, and initialize SDD work in parallel without branch conflicts.
+- Claude Code & Multi-agent harness templates: `CLAUDE.local.md` (personal preferences), `.claude/settings.json`, `.mcp.json` (Model Context Protocol client configuration), and `.env.example`.
+- Golden Reference Patterns: scaffold clean architecture reference modules (`docs/core-principles-and-coding-standards/reference-patterns/`) with clean Service & Controller examples for Generic and NestJS.
+- Tutorial 6: `docs/tutorials/06-PARALLEL_WORKTREES.md` explaining parallel agent workflows using Git Worktree.
+
+### Changed
+- `src/stealth.js` now automatically ignores `CLAUDE.local.md` and `.claude/settings.local.json`.
+- `src/stealth.js` safely supports Git Worktrees (where `.git` is a pointer file with `gitdir:` instead of a directory).
+- `TASKS_SKELETON` in `src/lifecycle.js`, `AGENTS.md` template, and `specs-workflow.md` now enforce Micro-Phasing (maximum 2-3 files per task item) and Stop-and-Verify checkpoints after each phase to prevent code-bombing.
+- `AGENTS.md` template adds `require-reference-file` pointing to the Golden Reference Patterns.
+
 ## 2.3.0 - 2026-10-11
 
 ### Added

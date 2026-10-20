@@ -55,7 +55,7 @@ describe('cli.js', () => {
 
       expect(code).toBe(0);
       const text = output();
-      for (const expected of ['idea', 'start', 'done', 'status', '--affects', '--force', '--for', '--work', '--init-hook', 'handoff', 'review', 'serve', 'lint']) {
+      for (const expected of ['idea', 'start', 'done', 'status', 'worktree', '--affects', '--force', '--for', '--work', '--init-hook', 'handoff', 'review', 'serve', 'lint']) {
         expect(text).toContain(expected);
       }
       for (const removed of ['propose', 'archive', 'verify-commit', '--target', 'generate feature']) {
@@ -395,6 +395,17 @@ describe('cli.js', () => {
 
       expect(output()).toContain('Review response is malformed');
       expect(output()).not.toContain('REVIEW PASSED');
+    });
+  });
+
+  describe('worktree command', () => {
+    const worktree = require('../src/worktree');
+
+    test('chạy worktree gọi worktree.createWorktree() và trả về exit 0', async () => {
+      jest.spyOn(worktree, 'createWorktree').mockReturnValue({ branch: 'feature/test', worktreeDir: '/tmp', slug: 'test' });
+      const code = await run(['worktree', 'Test Feature'], tmpDir);
+      expect(code).toBe(0);
+      expect(worktree.createWorktree).toHaveBeenCalledWith('Test Feature', tmpDir);
     });
   });
 });

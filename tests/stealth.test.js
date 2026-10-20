@@ -52,6 +52,8 @@ describe('appendEntries()', () => {
   test('STEALTH_ENTRIES cũng exclude file config của speckit-ai', () => {
     expect(STEALTH_ENTRIES).toContain('.speckitrc');
     expect(STEALTH_ENTRIES).toContain('speckit.config.json');
+    expect(STEALTH_ENTRIES).toContain('CLAUDE.local.md');
+    expect(STEALTH_ENTRIES).toContain('.claude/settings.local.json');
   });
 
   test('xử lý đúng content không có newline cuối', () => {

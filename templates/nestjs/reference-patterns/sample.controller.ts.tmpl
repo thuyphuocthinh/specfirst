@@ -1,0 +1,24 @@
+import { Controller, Post, Get, Body, Param, HttpCode, HttpStatus } from '@nestjs/common';
+import { UsersService, CreateUserDto, UserResponse } from './sample.service';
+
+/**
+ * Golden Reference Pattern: NestJS Controller
+ * Quy tắc:
+ * 1. Thin Controller: Chỉ khai báo routing, validation pipe, gọi service và trả response.
+ * 2. Tuyệt đối không query database hay xử lý logic nặng tại Controller.
+ */
+@Controller('users')
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserResponse> {
+    return this.usersService.create(createUserDto);
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string): Promise<UserResponse> {
+    return this.usersService.findById(id);
+  }
+}

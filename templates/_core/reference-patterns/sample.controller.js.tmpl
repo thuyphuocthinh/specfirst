@@ -1,0 +1,60 @@
+'use strict';
+
+/**
+ * @fileoverview Golden Reference Pattern: Controller Layer (Clean Architecture)
+ * Quy tắc:
+ * 1. Thin Controller: Controller CHỈ nhận request, validate HTTP parameters, gọi Service và trả về response.
+ * 2. KHÔNG BAO GIỜ viết nghiệp vụ hay query database trực tiếp tại controller.
+ * 3. Chuyển đổi mã lỗi domain sang HTTP status code tương ứng (400, 404, 500).
+ */
+
+class UserController {
+  /**
+   * @param {Object} userService - Instance của UserService
+   */
+  constructor(userService) {
+    if (!userService) {
+      throw new Error('[UserController] userService is required');
+    }
+    this.userService = userService;
+  }
+
+  /**
+   * Handler tạo user (ví dụ Express / Fastify)
+   */
+  async create(req, res) {
+    try {
+      const { email, name } = req.body || {};
+      const user = await this.userService.createUser({ email, name });
+      return res.status(201).json({ success: true, data: user });
+    } catch (err) {
+      if (err.code === 'USER_ALREADY_EXISTS') {
+        return res.status(409).json({ error: err.message });
+      }
+      if (err.message.includes('Invalid') || err.message.includes('must be')) {
+        return res.status(400).json({ error: err.message });
+      }
+      console.error('[UserController] create failed:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+
+  /**
+   * Handler lấy user theo ID
+   */
+  async getById(req, res) {
+    try {
+      const { id } = req.params;
+      const user = await this.userService.getUserById(id);
+      return res.status(200).json({ success: true, data: user });
+    } catch (err) {
+      if (err.code === 'NOT_FOUND') {
+        return res.status(404).json({ error: err.message });
+      }
+      console.error('[UserController] getById failed:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+}
+
+module.exports = { UserController };

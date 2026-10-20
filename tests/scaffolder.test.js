@@ -116,6 +116,27 @@ describe('buildFileMap()', () => {
     expect(dests).toContain('.agents/skills/spec-review/SKILL.md');
   });
 
+  test('buildFileMap includes harness files (CLAUDE.local.md, .claude/settings.json, .mcp.json, .env.example)', () => {
+    const map = buildFileMap('generic');
+    const dests = map.map(e => e.dest);
+    expect(dests).toContain('CLAUDE.local.md');
+    expect(dests).toContain('.claude/settings.json');
+    expect(dests).toContain('.mcp.json');
+    expect(dests).toContain('.env.example');
+  });
+
+  test('buildFileMap includes Golden Reference Patterns', () => {
+    const mapGeneric = buildFileMap('generic');
+    const destsGeneric = mapGeneric.map(e => e.dest);
+    expect(destsGeneric).toContain('docs/core-principles-and-coding-standards/reference-patterns/sample.service.js');
+    expect(destsGeneric).toContain('docs/core-principles-and-coding-standards/reference-patterns/sample.controller.js');
+
+    const mapNest = buildFileMap('nestjs');
+    const destsNest = mapNest.map(e => e.dest);
+    expect(destsNest).toContain('docs/core-principles-and-coding-standards/reference-patterns/sample.service.ts');
+    expect(destsNest).toContain('docs/core-principles-and-coding-standards/reference-patterns/sample.controller.ts');
+  });
+
   // --- mode=existing ---
   test('buildFileMap mode=existing dùng _existing/technology.md.tmpl', () => {
     const map = buildFileMap('nestjs', 'existing');

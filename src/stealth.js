@@ -7,6 +7,8 @@ const path = require('path');
 const STEALTH_ENTRIES = [
   '.agents/',
   'CLAUDE.md',
+  'CLAUDE.local.md',
+  '.claude/settings.local.json',
   '.cursorrules',
   'docs/',
   'specs/',
@@ -20,7 +22,24 @@ const STEALTH_ENTRIES = [
  */
 function findGitDir(targetDir) {
   const gitDir = path.join(targetDir, '.git');
-  return fs.existsSync(gitDir) ? gitDir : null;
+  if (!fs.existsSync(gitDir)) return null;
+  try {
+    const stat = fs.statSync(gitDir);
+    if (stat.isDirectory()) return gitDir;
+    if (stat.isFile()) {
+      const content = fs.readFileSync(gitDir, 'utf8').trim();
+      const match = content.match(/^gitdir:\s*(.+)$/i);
+      if (match) {
+        const resolvedPath = path.resolve(targetDir, match[1].trim());
+        if (fs.existsSync(resolvedPath)) return resolvedPath;
+      }
+    }
+  } catch {
+    return null;
+  }
+  return null;
+
+
 }
 
 /**

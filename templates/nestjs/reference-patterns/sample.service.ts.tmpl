@@ -1,0 +1,59 @@
+import { Injectable, BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
+
+export interface CreateUserDto {
+  email: string;
+  name: string;
+}
+
+export interface UserResponse {
+  id: string;
+  email: string;
+  name: string;
+  createdAt: Date;
+}
+
+/**
+ * Golden Reference Pattern: NestJS Service
+ * Quy tắc:
+ * 1. Single Responsibility: Chỉ xử lý business logic và domain validation.
+ * 2. Dependency Injection: Inject Repository qua constructor.
+ * 3. Exception Handling: Bắn các NestJS Built-in Exceptions (BadRequestException, NotFoundException...).
+ */
+@Injectable()
+export class UsersService {
+  constructor(
+    // private readonly usersRepository: UsersRepository,
+  ) {}
+
+  async create(dto: CreateUserDto): Promise<UserResponse> {
+    if (!dto.email || !dto.email.includes('@')) {
+      throw new BadRequestException('Invalid email format');
+    }
+
+    // Example check existing:
+    // const existing = await this.usersRepository.findByEmail(dto.email);
+    // if (existing) throw new ConflictException('Email already in use');
+
+    return {
+      id: 'usr_' + Date.now(),
+      email: dto.email.toLowerCase().trim(),
+      name: dto.name.trim(),
+      createdAt: new Date(),
+    };
+  }
+
+  async findById(id: string): Promise<UserResponse> {
+    if (!id) throw new BadRequestException('User ID is required');
+
+    // Example query:
+    // const user = await this.usersRepository.findById(id);
+    // if (!user) throw new NotFoundException(`User with ID ${id} not found`);
+
+    return {
+      id,
+      email: 'user@example.com',
+      name: 'Sample User',
+      createdAt: new Date(),
+    };
+  }
+}

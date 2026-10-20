@@ -52,6 +52,7 @@ specs/
 | `speckit-ai start "<Title or idea>"` | Start a **new feature** in `specs/active/` |
 | `speckit-ai start "<Title>" --affects=a,b` | Start a change to **existing** features `a`, `b` (their specs are copied into `targets/`) |
 | `speckit-ai start "<Title>" --baseline` | Write the spec of code that **already exists** (no new code, so no tasks or review needed at `done`) |
+| `speckit-ai worktree "<Title>"` | Create a new Git worktree and branch, start work in parallel |
 | `speckit-ai status` | Active works + ideas in dependency order (`> **Depends-on**:` in an idea) |
 | `speckit-ai lint` | Check spec structure (runs in the pre-commit hook) |
 | `speckit-ai generate adr "<Title>"` | New decision record |
@@ -88,9 +89,12 @@ Technical approach, files to create/modify, dependencies, risks.
 
 ### Step 3 — `tasks.md`
 Step-by-step checklist in 4 phases: **Setup, Logic, UI / API, Tests**. The Tests phase is mandatory.
+- **Micro-phasing**: Limit each task item to modifying/creating at most 2-3 files.
+- **Reference Golden Code**: Check `docs/.../reference-patterns/` for clean architecture examples before writing code.
 
 ### Step 4 — Implement
 Code according to `tasks.md`. Check off each task. Do not add scope beyond what's in tasks.
+- **Stop-and-Verify**: After completing each Phase, run tests/lint, summarize changes, and wait for developer confirmation before starting the next Phase. Never one-shot the whole feature in a single turn!
 
 ### Step 5 — `review.md` (AI self-review)
 

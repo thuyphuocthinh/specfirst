@@ -64,9 +64,29 @@ function buildFileMap(framework, mode = 'new', scope = 'all') {
   // Với mode=existing, các docs template swap sang _existing/ skeleton
   const docsTmpl = (name) => mode === 'existing' ? `_existing/${name}` : null;
 
+  const hasFwRefService = fs.existsSync(path.join(TEMPLATES_DIR, `${fw}/reference-patterns/sample.service.ts.tmpl`));
+  const refServiceTmpl = hasFwRefService
+    ? `${fw}/reference-patterns/sample.service.ts.tmpl`
+    : '_core/reference-patterns/sample.service.js.tmpl';
+  const refServiceDest = hasFwRefService
+    ? 'docs/core-principles-and-coding-standards/reference-patterns/sample.service.ts'
+    : 'docs/core-principles-and-coding-standards/reference-patterns/sample.service.js';
+
+  const hasFwRefController = fs.existsSync(path.join(TEMPLATES_DIR, `${fw}/reference-patterns/sample.controller.ts.tmpl`));
+  const refControllerTmpl = hasFwRefController
+    ? `${fw}/reference-patterns/sample.controller.ts.tmpl`
+    : '_core/reference-patterns/sample.controller.js.tmpl';
+  const refControllerDest = hasFwRefController
+    ? 'docs/core-principles-and-coding-standards/reference-patterns/sample.controller.ts'
+    : 'docs/core-principles-and-coding-standards/reference-patterns/sample.controller.js';
+
   const allFiles = [
     // Cross-tool wrappers (root) — same in both modes
     { tmpl: '_core/CLAUDE.md.tmpl',         dest: 'CLAUDE.md', isDoc: false },
+    { tmpl: '_core/CLAUDE.local.md.tmpl',   dest: 'CLAUDE.local.md', isDoc: false },
+    { tmpl: '_core/.claude/settings.json.tmpl', dest: '.claude/settings.json', isDoc: false },
+    { tmpl: '_core/.mcp.json.tmpl',         dest: '.mcp.json', isDoc: false },
+    { tmpl: '_core/.env.example.tmpl',      dest: '.env.example', isDoc: false },
     { tmpl: '_core/cursorrules.tmpl',        dest: '.cursorrules', isDoc: false },
 
     // .agents/ — same in both modes
@@ -89,6 +109,10 @@ function buildFileMap(framework, mode = 'new', scope = 'all') {
     { tmpl: docsTmpl('structure.md.tmpl')             || `${fw}/structure.md.tmpl`,       dest: 'docs/core-principles-and-coding-standards/structure.md', isDoc: true },
     { tmpl: docsTmpl('coding-conventions.md.tmpl')    || `${fw}/coding-conventions.md.tmpl`, dest: 'docs/core-principles-and-coding-standards/coding-conventions.md', isDoc: true },
     { tmpl: docsTmpl('coding-style.md.tmpl')          || '_core/coding-style.md.tmpl',   dest: 'docs/core-principles-and-coding-standards/coding-style.md', isDoc: true },
+
+    // Golden Reference Patterns — clean code examples
+    { tmpl: refServiceTmpl, dest: refServiceDest, isDoc: true },
+    { tmpl: refControllerTmpl, dest: refControllerDest, isDoc: true },
 
     // docs/instructions-and-work-flows/ — same in both modes
     { tmpl: '_core/workflow-adding-feature.md.tmpl', dest: 'docs/core-principles-and-coding-standards/instructions-and-work-flows/adding-a-new-feature.md', isDoc: true },
@@ -122,11 +146,13 @@ function scaffoldFiles({ targetDir, framework, packageManager, mode, subProjectN
 
   // Tạo thư mục cơ bản
   ensureDir(path.join(targetDir, '.agents', 'skills'));
+  ensureDir(path.join(targetDir, '.claude'));
   ensureDir(path.join(targetDir, 'specs', 'active'));
   ensureDir(path.join(targetDir, 'specs', 'features'));
   
   const docsPrefix = subProjectName ? `docs/${subProjectName}` : 'docs';
   ensureDir(path.join(targetDir, docsPrefix, 'core-principles-and-coding-standards', 'instructions-and-work-flows'));
+  ensureDir(path.join(targetDir, docsPrefix, 'core-principles-and-coding-standards', 'reference-patterns'));
 
   const fileMap = buildFileMap(framework, mode, scope);
   let created = 0;

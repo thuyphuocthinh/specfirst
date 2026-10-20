@@ -88,6 +88,7 @@ describe('lifecycle.js', () => {
       expect(read(`${base}/proposal.md`)).toMatch(/^# Proposal: Refund đơn hàng$/m);
       expect(read(`${base}/proposal.md`)).toContain('> **Affects**: refund-don-hang');
       const tasks = read(`${base}/tasks.md`);
+      expect(tasks).toContain('Micro-Phasing Rules');
       for (const phase of ['Phase 1: Setup', 'Phase 2: Logic', 'Phase 3: UI / API', 'Phase 4: Tests']) {
         expect(tasks).toContain(phase);
       }

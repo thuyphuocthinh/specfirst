@@ -18,7 +18,7 @@ Read the rest only when the task needs it (this keeps your context small):
 | When the task... | Read |
 |---|---|
 | creates, moves or renames files | `docs/core-principles-and-coding-standards/structure.md` — Directory structure |
-| writes or changes logic | `docs/core-principles-and-coding-standards/coding-conventions.md` — Patterns, conventions |
+| writes or changes logic | `docs/core-principles-and-coding-standards/coding-conventions.md` & `reference-patterns/` — Patterns, clean code examples |
 | formats code or touches lint | `docs/core-principles-and-coding-standards/coding-style.md` — Lint, format |
 | is a specific recurring task | `docs/core-principles-and-coding-standards/instructions-and-work-flows/` — Step-by-step guides |
 
@@ -30,7 +30,9 @@ Read the rest only when the task needs it (this keeps your context small):
 - `no-bypass-type-check` — Never use `@ts-ignore` or cast as `any`
 - `no-bypass-commit-hook` — Never run `git commit --no-verify`
 - `no-auto-deploy` — Never run deploy/publish/release commands on your own
-- `require-reference-file` — Before generating a new class/component/service, you MUST ask the user for a "Reference File" (a similar existing file in the project) to mimic its Clean Code, SOLID patterns, and Dependency Injection style. Do not invent your own structure!
+- `require-reference-file` — Before generating a new class/component/service, you MUST read the Golden Reference Patterns at `docs/core-principles-and-coding-standards/reference-patterns/` (or ask the user for an existing reference file). Clone its Clean Code, SOLID patterns, and Dependency Injection style. Do not invent your own structure!
+- `micro-phasing` — Never create or modify more than 2-3 files in a single task.
+- `stop-and-verify` — After completing each Phase in `tasks.md`, run tests/lint, summarize what was done, and STOP. Ask the user for confirmation before proceeding to the next Phase. Never one-shot multiple phases!
 
 ---
 

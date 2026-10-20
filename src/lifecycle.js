@@ -103,6 +103,11 @@ function printStatus(targetDir = process.cwd(), { json = false } = {}) {
 
 const TASKS_SKELETON = (title) => `# Tasks: ${title}
 
+> **Micro-Phasing Rules**:
+> 1. Mỗi task chỉ tạo hoặc sửa tối đa 2-3 files.
+> 2. Sau mỗi Phase: chạy test/lint kiểm tra, dừng lại tóm tắt và xin xác nhận trước khi sang Phase kế tiếp.
+> 3. Tuyệt đối không làm one-shot toàn bộ các Phase.
+
 ## Phase 1: Setup
 
 ## Phase 2: Logic
