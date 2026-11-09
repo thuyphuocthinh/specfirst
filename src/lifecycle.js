@@ -103,10 +103,12 @@ function printStatus(targetDir = process.cwd(), { json = false } = {}) {
 
 const TASKS_SKELETON = (title) => `# Tasks: ${title}
 
-> **Micro-Phasing Rules**:
-> 1. Mỗi task chỉ tạo hoặc sửa tối đa 2-3 files.
-> 2. Sau mỗi Phase: chạy test/lint kiểm tra, dừng lại tóm tắt và xin xác nhận trước khi sang Phase kế tiếp.
-> 3. Tuyệt đối không làm one-shot toàn bộ các Phase.
+> **Micro-Phasing Rules & Phase Delta Protocol**:
+> 1. Limit each task item to creating or modifying at most 2-3 files.
+> 2. Before modifying code for each Phase: AI MUST generate a Delta Artifact preview (showing new code \`+\`, modified \`~\`, deleted \`-\`) for user review via chat.
+> 3. Only implement changes to disk after the user explicitly approves ("proceed" / "go ahead").
+> 4. Do not auto-commit git between phases. After completing each Phase: run tests/lint, update tasks.md, and wait for the next Phase instruction.
+> 5. Never one-shot all phases in a single turn.
 
 ## Phase 1: Setup
 

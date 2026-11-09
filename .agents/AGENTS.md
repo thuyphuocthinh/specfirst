@@ -37,6 +37,7 @@ Chỉ đọc phần còn lại khi task cần (để giữ context nhỏ):
 - `no-bypass-type-check`: Không dùng `@ts-ignore`, không cast `as any`
 - `no-auto-publish`: Không tự ý chạy `npm publish`
 - `no-install-unknown-pkg`: Không tự ý cài package lạ không có trong plan
+- `phase-delta-preview`: Trước khi sửa code của mỗi Phase trong `tasks.md`, AI BẮT BUỘC phải tạo một Delta Artifact (chỉ ra phần code mới `+`, sửa `~`, xóa `-`) và gửi người dùng xem trước qua chat. Tuyệt đối KHÔNG tự ý sửa file trước khi người dùng chốt lệnh ("oke làm đi" / "triển khai"). KHÔNG tự động git commit giữa các phase.
 
 ---
 

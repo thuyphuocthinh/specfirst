@@ -206,6 +206,16 @@ describe('lifecycle.js', () => {
       expect(exists('specs/active/checkout/tasks.md')).toBe(true);
     });
 
+    test('phase-delta-artifact: tasks.md contains Phase Delta & Micro-Phasing rules in English', () => {
+      setupProject();
+      startWork('Payment', {}, tmpDir);
+      const content = read('specs/active/payment/tasks.md');
+      expect(content).toContain('Micro-Phasing Rules & Phase Delta Protocol');
+      expect(content).toContain('Delta Artifact preview');
+      expect(content).toContain('Only implement changes to disk after the user explicitly approves');
+      expect(content).toContain('Do not auto-commit git between phases');
+    });
+
     test('AC-17: --baseline không được kết hợp với --affects và không tạo gì', () => {
       setupProject();
       write('specs/features/auth/spec.md', '# Spec: Auth\n');

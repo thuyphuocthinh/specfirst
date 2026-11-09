@@ -89,8 +89,16 @@ Technical approach, files to create/modify, dependencies, risks.
 ### Step 3 — `tasks.md`
 Step-by-step checklist in 4 phases: **Setup, Logic, UI / API, Tests**. The Tests phase is mandatory.
 
-### Step 4 — Implement
+### Step 4 — Implement (Conversational Phase Delta Protocol)
 Code according to `tasks.md`. Check off each task. Do not add scope beyond what's in tasks.
+- **Micro-Phasing**: Execute Phase-by-Phase sequentially (Setup → Logic → UI / API → Tests). Never one-shot multiple phases.
+- **Phase Delta Preview**: When starting a Phase (e.g. user says "proceed with phase 1"), AI **must not modify files immediately**. Instead, create a Delta Artifact highlighting:
+  - New code (`+ CREATE / ADD`)
+  - Modified code (`~ MODIFY`) with clean diff snippets (deleted `-`, added `+`, 3 lines of surrounding context)
+  - Deleted code (`- DELETE`)
+- **Conversational Review (No UI Buttons)**: User reviews the preview via chat and can request refinements. AI updates the preview. Only when the user explicitly approves ("proceed" / "go ahead"), the AI applies changes to disk.
+- **No Mid-Phase Git Commits**: Keep changes in the working tree so the user can easily review via `git diff`.
+- **Stop-and-Verify**: After applying changes for the Phase, run tests/lint, check off `[x]` in `tasks.md`, and stop to wait for the next Phase instruction.
 
 ### Step 5 — `review.md` (AI self-review)
 

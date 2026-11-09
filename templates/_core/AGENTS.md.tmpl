@@ -33,6 +33,7 @@ Read the rest only when the task needs it (this keeps your context small):
 - `require-reference-file` — Before generating a new class/component/service, you MUST read the Golden Reference Patterns at `docs/core-principles-and-coding-standards/reference-patterns/` (or ask the user for an existing reference file). Clone its Clean Code, SOLID patterns, and Dependency Injection style. Do not invent your own structure!
 - `micro-phasing` — Never create or modify more than 2-3 files in a single task.
 - `stop-and-verify` — After completing each Phase in `tasks.md`, run tests/lint, summarize what was done, and STOP. Ask the user for confirmation before proceeding to the next Phase. Never one-shot multiple phases!
+- `phase-delta-preview` — Before modifying code for each Phase in `tasks.md`, AI MUST generate a Delta Artifact (showing new code `+`, modifications `~`, deletions `-`) and send it to the user for review via chat. Absolutely DO NOT modify files before the user explicitly confirms ("proceed" / "go ahead"). DO NOT auto-commit git between phases.
 
 ---
 

@@ -65,9 +65,13 @@ When the user asks you to "create task list" based on this plan, you MUST struct
 - **Phase 3: UI / API** (Controllers, Routes, React components)
 - **Phase 4: Tests** (Unit tests, Integration tests). *MANDATORY: If you skip this phase, the task list is considered invalid.*
 
+Execution Protocol:
+- Before modifying code in each Phase, the AI MUST produce a Delta Artifact showing what will be added (`+`), modified (`~`), or removed (`-`).
+- The AI waits for the user to review and confirm before writing any code to disk.
+
 ### Step 6 — Report
 
 Notify the user:
 - Path to plan.md just created
 - Summary: X new files, Y modified files
-- Next step: "Type 'create task list for [feature]' to continue"
+- Next step: "Type 'create task list for [feature]' to continue. Once tasks are ready, type 'proceed with phase 1' to start with a Delta preview."

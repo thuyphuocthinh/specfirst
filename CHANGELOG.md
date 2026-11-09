@@ -4,6 +4,20 @@ All notable changes to `speckit-ai`. Versions before 2.2.0 are described by thei
 
 After updating, run `npx speckit-ai upgrade` (add `--apply` to write) to refresh `specs/_workflow.md` and the skills in `.agents/skills/`. Your own `.agents/AGENTS.md` is never changed by the tool: `upgrade` only lists the lines you may want to add.
 
+## 2.5.0 - 2026-11-09
+
+### Added
+- Phase Delta Preview & Conversational Staging Protocol:
+  - Step 4 of the SDD workflow (`specs-workflow.md`) now standardizes phase-by-phase execution with Delta Artifact previews (new code `+`, modifications `~`, deletions `-`) presented to the user prior to file changes.
+  - Conversational approval: Developers review previews directly in chat and request revisions or approve ("proceed" / "go ahead") without complex UI buttons.
+  - `phase-delta-preview` operation rule added to `AGENTS.md` and `templates/_core/AGENTS.md.tmpl` under `Never Bypass`.
+  - Prohibition of mid-phase git auto-commits: all intermediate phase changes are preserved in the working directory for clean inspection with `git diff`.
+  - Skill `spec-plan` updated to guide AI in generating Delta Artifacts before modifying code for each phase.
+
+### Changed
+- `TASKS_SKELETON` in `src/lifecycle.js` updated to enforce `Micro-Phasing Rules & Phase Delta Protocol`.
+- `workflow-adding-feature.md` updated with phase preview checklist.
+
 ## 2.4.0 - 2026-10-20
 
 ### Added

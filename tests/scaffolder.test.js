@@ -406,7 +406,26 @@ describe('scaffold()', () => {
 
     const content = fs.readFileSync(path.join(tmpDir, 'CLAUDE.md'), 'utf8');
     expect(content).toBe('This is a custom CLAUDE NestJS'); // Dùng custom
-    // Các file không override (như AGENTS.md) vẫn đọc được từ default nhờ fallback
+
+    expect(fs.existsSync(path.join(tmpDir, '.agents', 'AGENTS.md'))).toBe(true);
+  });
+
+  test('phase-delta-artifact: scaffolded files contain phase-delta-preview and Conversational Phase Delta Protocol', () => {
+    scaffold({
+      targetDir: tmpDir,
+      projectConfig: { type: 'single', framework: 'nestjs', packageManager: 'npm' }
+    });
+
+    const agentsContent = fs.readFileSync(path.join(tmpDir, '.agents', 'AGENTS.md'), 'utf8');
+    expect(agentsContent).toContain('phase-delta-preview');
+
+    const workflowContent = fs.readFileSync(path.join(tmpDir, 'specs', '_workflow.md'), 'utf8');
+    expect(workflowContent).toContain('Conversational Phase Delta Protocol');
+    expect(workflowContent).toContain('Phase Delta Preview');
+
+    const skillContent = fs.readFileSync(path.join(tmpDir, '.agents', 'skills', 'spec-plan', 'SKILL.md'), 'utf8');
+    expect(skillContent).toContain('Delta Artifact');
+
     expect(fs.existsSync(path.join(tmpDir, '.agents', 'AGENTS.md'))).toBe(true);
   });
 });
