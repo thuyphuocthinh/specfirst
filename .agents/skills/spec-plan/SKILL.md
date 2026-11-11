@@ -23,6 +23,9 @@ Read every file in `specs/active/<name>/targets/` and `proposal.md` (if several 
 ### Step 2 — Technical analysis
 
 Before writing the plan, ask yourself:
+- **Contract & Handover Inspection (Architect Role)**: If consuming an API or backend handover contract (`specs/contracts/<name>.md`):
+  - Extract data schemas into TypeScript/JSDoc types.
+  - Plan mock data / MSW handlers for offline frontend development.
 - What new files need to be created? What existing files need to be modified?
 - Is there any existing code or module that can be reused?
 - What new dependencies need to be installed?
@@ -63,7 +66,15 @@ When the user asks you to "create task list" based on this plan, you MUST struct
 - **Phase 1: Setup** (Scaffolding, DB migrations, etc.)
 - **Phase 2: Logic** (Core business logic, services, domain models)
 - **Phase 3: UI / API** (Controllers, Routes, React components)
-- **Phase 4: Tests** (Unit tests, Integration tests). *MANDATORY: If you skip this phase, the task list is considered invalid.*
+  - **WBS UI State Requirement**: UI tasks must explicitly cover the 4 fundamental UI states:
+    - *Loading*: Spinner or skeleton while data is in flight.
+    - *Empty*: User-friendly display when response is empty.
+    - *Success*: Rendered data and interactive actions.
+    - *Error*: User-friendly handling of HTTP error codes.
+  - **Traceability Tag**: Tag each task with the AC it fulfills (e.g. `[Phục vụ AC-1]`).
+- **Phase 4: Tests** (Test Case Design & Test Implementation). *MANDATORY: If you skip this phase, the task list is considered invalid.*
+  - **4A. Test Case Design (QA Role - Trước khi viết code test)**: Thiết kế tài liệu kịch bản `test-cases.md` (chạy `speckit-ai generate test-cases` hoặc yêu cầu AI sinh) bao phủ Positive, Negative, Boundary, và các trạng thái UI. Xác định rõ các test case cấp Unit/Component (bắt buộc) và E2E Playwright (theo yêu cầu/luồng trọng yếu).
+  - **4B. Test Implementation (Dev / Automation)**: Viết code kiểm thử tự động hóa dựa trên kịch bản từ `test-cases.md`. Chạy test đảm bảo 100% pass.
 
 Execution Protocol:
 - Before modifying code in each Phase, the AI MUST produce a Delta Artifact showing what will be added (`+`), modified (`~`), or removed (`-`).

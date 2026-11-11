@@ -21,8 +21,10 @@ Trigger phrases:
 
 Read in this order:
 1. `specs/active/<name>/targets/*.md` → know the Acceptance Criteria and Feature Type (if several works are active, ask which one)
-2. `specs/active/<name>/tasks.md` → know what was implemented
-3. `docs/core-principles-and-coding-standards/coding-conventions.md` → the code standards
+2. `specs/contracts/*.md` → inspect contract schemas, status codes, and error formats if referenced via `> **Contracts**:`
+3. `specs/active/<name>/test-cases.md` (nếu có) → đối chiếu danh sách kịch bản kiểm thử (TC-ID) đã thiết kế
+4. `specs/active/<name>/tasks.md` → know what was implemented
+5. `docs/core-principles-and-coding-standards/coding-conventions.md` → the code standards
 
 ### Step 2 — Determine which reviews are needed
 
@@ -78,7 +80,10 @@ Act as a strict Senior Architect. Check each created/modified file:
 
 #### 5e. Summary (all features)
 
-- Check off each Acceptance Criteria from the target specs, note Pass/Fail with reason. Write each one as `AC-n` (for example `AC-3: Pass, upload over 5MB returns 400`): `done` refuses a review.md that does not mention every new or changed `AC-n` of the targets (all of them for a new feature; for a change to an existing feature, those that are new or differ from the current spec)
+- **Requirements Traceability Matrix (RTM)**: Format the summary as a table checking off each Acceptance Criteria from the target specs:
+  `| AC ID | Requirement | Verification / Test | Status (Pass/Fail) | Notes |`
+  Write each one clearly as `AC-n` (for example `AC-3: Pass, upload over 5MB returns 400`): `done` refuses a review.md that does not mention every new or changed `AC-n` of the targets.
+- **Contract Conformance**: If the feature references a contract, verify that request payloads, status codes, and error responses strictly match the contract specification.
 - If Fail → describe the issue and how to fix it
 - Lessons Learned: add a `### Lessons Learned` heading with bullets for any insight or decision worth remembering (write `None` if there is nothing). `done` saves this section to `specs/features/<slug>/lessons.md` so the next work on the feature can read it; keep each bullet self-contained
 

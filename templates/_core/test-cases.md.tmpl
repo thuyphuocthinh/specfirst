@@ -1,0 +1,27 @@
+# Test Cases: {{TITLE}}
+
+> **Target Spec**: `{{SPEC_PATH}}`
+> **Author**: QA / Tester (AI-Assisted)
+> **Status**: Draft
+
+## Overview
+
+Tài liệu đặc tả kịch bản kiểm thử chi tiết trước khi triển khai code test tự động hoặc kiểm thử thủ công (manual test).
+
+---
+
+## Ma trận kịch bản kiểm thử (Test Matrix)
+
+| TC-ID | Mapped AC | Scenario / Test Case Description | Test Level | Type | Pre-conditions | Test Steps & Test Data | Expected Result |
+|:---:|:---:|---|:---:|:---:|---|---|---|
+| **TC-01** | AC-1 | [Kịch bản kiểm thử Happy Path] | Unit / Component | Positive | [Tiền điều kiện] | 1. [Bước 1 với dữ liệu chuẩn] | [Kết quả 200 OK / UI hiển thị data] |
+| **TC-02** | AC-1 | [Kịch bản kiểm thử Negative / Dữ liệu lỗi] | Unit / Component | Negative | [Tiền điều kiện] | 1. [Dữ liệu không hợp lệ] | [Báo lỗi 400 / Thông báo thân thiện] |
+| **TC-03** | AC-1 | [Kịch bản kiểm thử Biên / Edge Cases] | Unit / Component | Boundary | [Tiền điều kiện] | 1. [Giá trị rỗng / null / cực đại] | [Xử lý an toàn không crash app] |
+| **TC-04** | AC-2 | [Kịch bản kiểm thử Trạng thái UI (Loading/Empty/Error)] | Component | UI State | [Mạng chậm hoặc data rỗng] | 1. [Kích hoạt action] | [Hiển thị Spinner / Empty state / Banner lỗi] |
+| **TC-05** | AC-2 | [Kịch bản kiểm thử luồng người dùng E2E (Nếu có yêu cầu)] | E2E Playwright | E2E | [Hệ thống chạy trên test env] | 1. [Mở browser]<br>2. [Thao tác toàn flow] | [Hoàn tất luồng mà không có lỗi console] |
+
+---
+
+## Ghi chú triển khai cho Automation (Phase 4B)
+- **Unit / Component Tests**: Bắt buộc triển khai tự động hóa bằng test framework của dự án (Jest/Vitest/RTL).
+- **Playwright E2E Tests**: Chỉ triển khai khi có yêu cầu cụ thể hoặc tính năng thuộc luồng nghiệp vụ trọng yếu (Critical User Flow).

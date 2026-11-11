@@ -30,11 +30,11 @@ Fill in the Problem and Rough Scope (and `Depends-on` / `Affects` if known), the
 
 ### Step 1 — Identify missing information
 
-Before writing the spec, ask the user about anything unclear:
-- What exactly does this feature do?
-- Who is the end user?
-- Any performance or security constraints?
-- What is explicitly out of scope?
+Act as a Senior Business Analyst (BA). When presented with a raw idea or prompt, conduct a concise interactive interview asking 3-5 clarification questions:
+- **Core Scope & Primary Flow**: Who is the user and what is the exact happy path?
+- **Edge Cases & Failure Modes**: What happens on network timeout, invalid input, or empty results?
+- **Non-functional Requirements**: Performance, authentication, authorization, data privacy constraints.
+- **Out of Scope**: What should explicitly NOT be built in this iteration?
 
 > Only ask about what is genuinely unclear. Do not ask about things already stated in the request.
 
@@ -69,8 +69,13 @@ Follow the structure of `specs/_template.md`. Ensure:
 
 **Feature Type**: Check the correct type to determine the review steps needed.
 
-**Acceptance Criteria**: One heading per criterion, `### AC-1: <short name>`, followed by Given / When / Then. Each must be:
-- Testable (verifiable by test or manual check)
+**Acceptance Criteria**: One heading per criterion, `### AC-1: <short name>`, strictly structured using BDD syntax:
+- `Given <precondition>`
+- `When <action>`
+- `Then <observable result>`
+
+Each criterion must be:
+- Testable (verifiable by automated test or verifiable manual check)
 - Specific (no ambiguity)
 - Measurable
 

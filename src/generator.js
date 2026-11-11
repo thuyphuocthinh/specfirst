@@ -97,8 +97,18 @@ function generate(type, title, options = {}, targetDir = process.cwd()) {
   const today = new Date().toISOString().split('T')[0];
   const finalContent = newContent.replace(/Date: .+/g, `Date: ${today}`);
 
+  // Replace Swagger / OpenAPI documentation URL if provided for contracts
+  let processedContent = finalContent;
+  if (options.url && (kind === 'contracts')) {
+    if (processedContent.includes('> **Swagger / OpenAPI**:')) {
+      processedContent = processedContent.replace(/> \*\*Swagger \/ OpenAPI\*\*: .+/g, `> **Swagger / OpenAPI**: ${options.url}`);
+    } else {
+      processedContent = processedContent.replace(/(> \*\*Version\*\*: .+\r?\n)/, `$1> **Swagger / OpenAPI**: ${options.url}\n`);
+    }
+  }
+
   fs.mkdirSync(destDir, { recursive: true });
-  fs.writeFileSync(destPath, finalContent, 'utf8');
+  fs.writeFileSync(destPath, processedContent, 'utf8');
 
   console.log(`[speckit-ai] ✅ Generated ${type}: ${path.relative(targetDir, destPath)}`);
   return destPath;
@@ -178,4 +188,54 @@ function generateTestsFromSpec(name, targetDir = process.cwd()) {
   return created;
 }
 
-module.exports = { toKebabCase, getNextAdrNumber, generate, generateTestsFromSpec, resolveDestinationDir };
+/**
+ * Sinh tài liệu đặc tả kịch bản kiểm thử test-cases.md từ các AC trong targets/ của việc đang làm.
+ * @param {string} [name] - tên việc active; bỏ trống nếu chỉ có một việc
+ * @returns {string} đường dẫn file test-cases.md đã tạo
+ */
+function generateTestCases(name, targetDir = process.cwd()) {
+  const { dir } = resolveActive(targetDir, name);
+  const targetsDir = path.join(dir, 'targets');
+  const targetFiles = fs.existsSync(targetsDir)
+    ? fs.readdirSync(targetsDir).filter((f) => f.endsWith('.md')).sort()
+    : [];
+
+  if (targetFiles.length === 0) {
+    throw new Error(`No target specs found in ${path.relative(targetDir, targetsDir)}.`);
+  }
+
+  const destPath = path.join(dir, 'test-cases.md');
+  if (fs.existsSync(destPath)) {
+    throw new Error(`File already exists: ${path.relative(targetDir, destPath)}`);
+  }
+
+  const acRegex = /^###\s+(AC-\d+)[^\w]*(.+)$/gm;
+  let tcIndex = 1;
+  const rows = [];
+
+  for (const file of targetFiles) {
+    const content = fs.readFileSync(path.join(targetsDir, file), 'utf8');
+    let match;
+    acRegex.lastIndex = 0;
+    while ((match = acRegex.exec(content)) !== null) {
+      const acId = match[1];
+      const desc = match[2].trim();
+      rows.push(`| **TC-${String(tcIndex++).padStart(2, '0')}** | ${acId} | Kiểm thử thành công: ${desc} | Unit / Component | Positive | Dữ liệu hợp lệ | Gọi hàm / Action với payload chuẩn | Trả về kết quả mong đợi |`);
+      rows.push(`| **TC-${String(tcIndex++).padStart(2, '0')}** | ${acId} | Kiểm thử thất bại: ${desc} với dữ liệu không hợp lệ | Unit / Component | Negative | Dữ liệu sai format | Gọi hàm / Action với payload lỗi | Báo lỗi hoặc hiển thị thông báo lỗi phù hợp |`);
+      rows.push(`| **TC-${String(tcIndex++).padStart(2, '0')}** | ${acId} | Kiểm thử biên (boundary/edge case): ${desc} | Unit / Component | Boundary | Giá trị null/rỗng | Kiểm tra xử lý biên an toàn | Không crash, fallback giá trị mặc định |`);
+    }
+  }
+
+  if (rows.length === 0) {
+    throw new Error(`No Acceptance Criteria (AC) found in target specs to generate test cases.`);
+  }
+
+  let content = `# Test Cases: ${path.basename(dir)}\n\n## Ma trận kịch bản kiểm thử (Test Matrix)\n\n| TC-ID | Mapped AC | Scenario / Test Case Description | Test Level | Type | Pre-conditions | Test Steps & Test Data | Expected Result |\n|:---:|:---:|---|:---:|:---:|---|---|---|\n`;
+  content += rows.join('\n') + '\n\n---\n\n## Ghi chú triển khai cho Automation (Phase 4B)\n- **Unit / Component Tests**: Bắt buộc triển khai tự động.\n- **Playwright E2E Tests**: Chỉ triển khai khi có yêu cầu cụ thể hoặc luồng trọng yếu.\n';
+
+  fs.writeFileSync(destPath, content, 'utf8');
+  console.log(`[speckit-ai] ✅ Generated test cases: ${path.relative(targetDir, destPath)}`);
+  return destPath;
+}
+
+module.exports = { toKebabCase, getNextAdrNumber, generate, generateTestsFromSpec, generateTestCases, resolveDestinationDir };

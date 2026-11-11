@@ -3,6 +3,8 @@
 > **Provider**: [Name of the providing service/team]
 > **Consumer**: [Name of the consuming service/team]
 > **Version**: 1.0.0
+> **Swagger / OpenAPI**: [Optional link to Swagger UI, Postman or API Docs]
+> **Postman Collection**: [Optional link or export path]
 > **Status**: [Draft / Active / Deprecated]
 
 ## 1. Overview
@@ -27,6 +29,13 @@
   "data": {}
 }
 ```
+
+**Consumer Guidance (Frontend / Client):**
+- **Mock Data**: Use sample response above for offline development / Mock Service Worker (MSW).
+- **UI States to handle**:
+  - *Loading*: skeleton or spinner while request is in flight.
+  - *Empty*: UI display when data is empty or null (`[]` / `{}`).
+  - *Error*: map HTTP error codes (Section 4) to user-friendly messages.
 
 ## 3. Data Models (Schemas)
 

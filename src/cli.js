@@ -25,8 +25,9 @@ Usage:
   npx speckit-ai worktree "<title>"
   npx speckit-ai done [<name>] [--force | --check]
   npx speckit-ai status [--json]
-  npx speckit-ai generate <adr|contract> "<title>" [--for=<feature>] [--work=<name>]
+  npx speckit-ai generate <adr|contract> "<title>" [--for=<feature>] [--work=<name>] [--url=<url>]
   npx speckit-ai generate tests [<name>]
+  npx speckit-ai generate test-cases [<name>]
   npx speckit-ai upgrade [--apply]
   npx speckit-ai lint
   npx speckit-ai handoff [<name>]
@@ -49,8 +50,9 @@ Commands (SDD flow: idea -> start -> done):
   done [<name>] --check            Run the same gates and report; writes nothing (exit 1 if not ready)
   status [--json]                  Show active works and ideas in dependency order
   generate adr "<Title>"           New decision record (next to the feature with --for, else the active work, else specs/decisions/)
-  generate contract "<Title>"      New API/Data Contract (same placement rules as adr)
+  generate contract "<Title>"      New API/Data Contract (with optional --url=<url>)
   generate tests [<name>]          Generate a test skeleton matching the ACs of the active work
+  generate test-cases [<name>]     Generate a test-cases.md specification matrix from ACs
   upgrade [--apply]                Compare with the current templates: report (or with --apply update) the files speckit-ai manages, save the old ones as .bak
   lint                             Lint spec files and decision records against templates
   handoff [<name>]                 Summarize uncommitted code and append to the active work's tasks.md
@@ -99,8 +101,8 @@ const ALLOWED_FLAGS = {
   worktree: [],
   done: ['force', 'check'],
   status: ['json'],
-  generate: ['for', 'work'],
-  g: ['for', 'work'],
+  generate: ['for', 'work', 'url'],
+  g: ['for', 'work', 'url'],
   lint: [],
   handoff: [],
   review: ['ref'],
@@ -230,10 +232,14 @@ async function dispatch(argv, targetDir) {
         generator.generateTestsFromSpec(titleParts.join(' ') || undefined, targetDir);
         return 0;
       }
+      if (type === 'test-cases' || type === 'tc') {
+        generator.generateTestCases(titleParts.join(' ') || undefined, targetDir);
+        return 0;
+      }
       generator.generate(
         type,
         titleParts.join(' '),
-        { forFeature: valueFlag(flags, 'for'), work: valueFlag(flags, 'work') },
+        { forFeature: valueFlag(flags, 'for'), work: valueFlag(flags, 'work'), url: valueFlag(flags, 'url') },
         targetDir
       );
       return 0;

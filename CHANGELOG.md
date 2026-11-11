@@ -4,6 +4,20 @@ All notable changes to `speckit-ai`. Versions before 2.2.0 are described by thei
 
 After updating, run `npx speckit-ai upgrade` (add `--apply` to write) to refresh `specs/_workflow.md` and the skills in `.agents/skills/`. Your own `.agents/AGENTS.md` is never changed by the tool: `upgrade` only lists the lines you may want to add.
 
+## 2.6.0 - 2026-11-11
+
+### Added
+- Software Builder Workflow & SDLC Standards:
+  - **BA Role (`spec-create`)**: Interactive interview protocol asking 3-5 clarification questions (scope, edge cases, personas) and strictly enforcing BDD syntax (`Given / When / Then`) for Acceptance Criteria (`AC-n`).
+  - **Backend-to-Frontend Contract Handover (`contracts/`)**: Updated contract template `templates/_core/contracts/_template.md.tmpl` supporting Markdown API documentation, Swagger/OpenAPI URLs, Postman collection paths, and consumer guidance for Mock Service Worker (MSW).
+  - **CLI option `--url=<url>` for `generate contract`**: Automatically embeds the Swagger or API documentation link directly into the contract metadata.
+  - **WBS 4 UI States Requirement (`spec-plan`)**: Frontend UI task breakdowns in `tasks.md` now explicitly cover the 4 fundamental UI states (*Loading, Empty, Success, Error*) and require traceability tags mapping to `AC-n`.
+  - **Test Cases Specification Engine (`test-cases.md`)**:
+    - New template `templates/_core/test-cases.md.tmpl` specifying detailed test matrices (Positive, Negative, Boundary, UI states) prior to writing test code.
+    - New CLI command `speckit-ai generate test-cases [<name>]` (alias: `speckit-ai g tc`) to generate test case specifications directly from Acceptance Criteria.
+    - Testing Pyramid alignment: baseline mandatory Unit/Component testing vs. on-demand/conditional Playwright E2E testing for critical user journeys.
+  - **Traceability Verification (`spec-review`)**: Self-review now mandates a Requirements Traceability Matrix (RTM) cross-referencing ACs and Test Case IDs.
+
 ## 2.5.0 - 2026-11-09
 
 ### Added

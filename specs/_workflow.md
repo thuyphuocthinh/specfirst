@@ -81,6 +81,7 @@ With several active works, pass the work name (`done <name>`, `generate adr "<Ti
 ### Step 1 — `targets/<feature>.md`
 Requirements, user stories, acceptance criteria, out of scope, open questions.
 Write every Acceptance Criterion as a heading: `### AC-1: <short name>` followed by Given / When / Then.
+> **BA Role Guideline**: Ask 3-5 clarification questions (scope, edge cases, persona) before finalizing the spec.
 > Do not implement if open questions are unresolved.
 
 ### Step 2 — `plan.md`
@@ -88,6 +89,8 @@ Technical approach, files to create/modify, dependencies, risks.
 
 ### Step 3 — `tasks.md`
 Step-by-step checklist in 4 phases: **Setup, Logic, UI / API, Tests**. The Tests phase is mandatory.
+- **WBS UI States**: UI tasks must explicitly cover the 4 fundamental states: **Loading**, **Empty**, **Success**, and **Error**.
+- **Traceability**: Map each technical task to the corresponding `AC-n` it implements.
 
 ### Step 4 — Implement (Conversational Phase Delta Protocol)
 Code according to `tasks.md`. Check off each task. Do not add scope beyond what's in tasks.
@@ -143,6 +146,14 @@ A decision belongs next to the feature it affects:
 
 Contracts follow the same rules (`contracts/`). To reference a shared decision or contract from a spec, add
 `> **Decisions**: 0003` or `> **Contracts**: auth-api` under the spec's title; `done` checks the files exist.
+
+### Backend-to-Frontend Handover (Contract-First Flow)
+
+When Backend hands over API specifications in Markdown (.md with Swagger links):
+1. Save the document into `specs/contracts/<name>.md` (or `active/<work>/contracts/<name>.md`).
+2. The Frontend work references `> **Contracts**: <name>` in its `targets/*.md`.
+3. Frontend AI extracts TypeScript/JSDoc types and Mock Data from the contract for offline development.
+4. `speckit-ai done` verifies that referenced contracts exist before allowing completion.
 
 ---
 
